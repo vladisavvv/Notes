@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">News</string>
+    <string name="app_name">Notes</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_add_notes">Add notes</string>
 

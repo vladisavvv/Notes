@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.news.MainActivity">
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        app:showAsAction="always" />
+        android:id="@+id/nameSorting"
+        android:title="Sorting by name" />
+    <item
+        android:id="@+id/dateSorting"
+        android:title="Sorting by date" />
 </menu>

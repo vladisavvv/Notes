@@ -1,5 +1,6 @@
 package com.example.news.adapters;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,17 +9,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.news.MainActivity;
 import com.example.news.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagViewHolder> {
+public class TagsFilterAdapter extends RecyclerView.Adapter<TagsFilterAdapter.TagViewHolder> {
     private List<String> tagsList = new ArrayList<>();
+    private MainActivity mainActivity;
 
-    void clear() {
-        tagsList.clear();
-        notifyDataSetChanged();
+    public TagsFilterAdapter(final MainActivity mainActivity) {
+        super();
+
+        this.mainActivity = mainActivity;
     }
 
     @NonNull
@@ -31,7 +35,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull TagViewHolder holder, int position) {
-        holder.bind(tagsList.get(position));
+        holder.bind(tagsList.get(position), position);
     }
 
     @Override
@@ -46,13 +50,28 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagViewHolder>
 
     class TagViewHolder extends RecyclerView.ViewHolder {
         private TextView cardTextView;
+        private View view;
 
-        void bind(String text) {
+        void bind(final String text,
+                  final int position) {
             cardTextView.setText(text);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println(tagsList);
+                    tagsList.remove(position);
+                    System.out.println(tagsList);
+                    mainActivity.applyFilter(tagsList);
+                    notifyDataSetChanged();
+                }
+            });
         }
 
         TagViewHolder(View itemView) {
             super(itemView);
+
+            this.view = itemView;
             cardTextView = itemView.findViewById(R.id.cardTextView);
         }
     }
