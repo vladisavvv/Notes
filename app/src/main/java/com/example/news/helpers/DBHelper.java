@@ -3,7 +3,6 @@ package com.example.news.helpers;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
@@ -12,8 +11,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("kek", "--- onCreate database ---");
-
         db.execSQL("create table notes ("
                 + "id integer primary key autoincrement,"
                 + "name text,"

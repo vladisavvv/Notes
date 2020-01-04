@@ -1,6 +1,5 @@
 package com.example.news;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -23,10 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.GridView;
-import android.widget.Switch;
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
                     tagsFilterAdapter.addItem(tagsTextInputEditText.getText().toString());
                     tagsTextInputEditText.setText("");
 
-                    updateAdapter();
                     applyFilter(tagsFilterAdapter.getTagsList());
                 }
             }
@@ -142,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             notesAdapter.clear();
 
+            int id = 0;
+
             if (c.moveToFirst()) {
                 int nameColIndex = c.getColumnIndex("name");
                 int notesColIndex = c.getColumnIndex("notes");
@@ -150,11 +147,14 @@ public class MainActivity extends AppCompatActivity {
 
                 do {
                     final List<String> tags = Arrays.asList(c.getString(tagsColIndex).split(","));
-                    notesAdapter.addItem(new Note(c.getString(nameColIndex), c.getString(notesColIndex), tags, c.getString(dateColIndex)));
+                    notesAdapter.addItem(new Note(c.getString(nameColIndex), c.getString(notesColIndex), tags, c.getString(dateColIndex), id));
+                    ++id;
                 } while (c.moveToNext());
             }
         } else {
             notesForGridAdapter.clear();
+
+            int id = 0;
 
             if (c.moveToFirst()) {
                 int nameColIndex = c.getColumnIndex("name");
@@ -164,7 +164,8 @@ public class MainActivity extends AppCompatActivity {
 
                 do {
                     List<String> tags = Arrays.asList(c.getString(tagsColIndex).split(","));
-                    notesForGridAdapter.addItem(new Note(c.getString(nameColIndex), c.getString(notesColIndex), tags, c.getString(dateColIndex)));
+                    notesForGridAdapter.addItem(new Note(c.getString(nameColIndex), c.getString(notesColIndex), tags, c.getString(dateColIndex), id));
+                    ++id;
                 } while (c.moveToNext());
             }
         }

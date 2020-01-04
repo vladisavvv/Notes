@@ -102,7 +102,7 @@ public class NotesForGridAdapter extends BaseAdapter {
 
                 browserIntent.putExtra("name", notesList.get(position).getName());
                 browserIntent.putExtra("description", notesList.get(position).getDescription());
-                browserIntent.putExtra("position", position + 1);
+                browserIntent.putExtra("position", notesList.get(position).getId() + 1);
                 browserIntent.putExtra("date", notesList.get(position).getDate());
 
                 final StringBuilder tags = new StringBuilder();

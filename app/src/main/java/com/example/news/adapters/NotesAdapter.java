@@ -65,7 +65,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
     @Override
     public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
-        holder.bind(notesList.get(position), position);
+        holder.bind(notesList.get(position));
     }
 
     @Override
@@ -83,14 +83,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
         for (int i = 0; i < notesList.size(); ++i) {
             final Note note = notesList.get(i);
-            boolean isAcceptedNote = true;
+            boolean isRequiredNote = true;
 
-            for (int j = 0; j < tagsList.size() && isAcceptedNote; ++j) {
+            for (int j = 0; j < tagsList.size() && isRequiredNote; ++j) {
                 if (!note.getTags().contains(tagsList.get(j)))
-                    isAcceptedNote = false;
+                    isRequiredNote = false;
             }
 
-            if (isAcceptedNote)
+            if (isRequiredNote)
                 newNotesList.add(note);
         }
 
@@ -99,16 +99,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     }
 
     class NotesViewHolder extends RecyclerView.ViewHolder {
-        private TextView cardTextView;
-        private TextView cardTextView2;
+        private TextView titleTextView;
+        private TextView descriptionTextView;
         private TextView dateTextView;
         private TagsAdapter tagsAdapter;
         private View view;
 
-        void bind(final Note note,
-                  final int position) {
-            cardTextView.setText((note.getName().length() > 0 ? note.getName() : note.getDate()));
-            cardTextView2.setText(note.getDescription());
+        void bind(final Note note) {
+            titleTextView.setText((note.getName().length() > 0 ? note.getName() : note.getDate()));
+            descriptionTextView.setText(note.getDescription());
 
             if (note.getName().length() > 0)
                 dateTextView.setText(note.getDate());
@@ -120,7 +119,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
                     intent.putExtra("name", note.getName());
                     intent.putExtra("description", note.getDescription());
-                    intent.putExtra("position", position + 1);
+                    intent.putExtra("position", note.getId() + 1);
                     intent.putExtra("date", note.getDate());
 
                     final StringBuilder tags = new StringBuilder();
@@ -142,8 +141,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
             this.view = itemView;
 
-            cardTextView = itemView.findViewById(R.id.cardTextView);
-            cardTextView2 = itemView.findViewById(R.id.cardTextView2);
+            titleTextView = itemView.findViewById(R.id.cardTextView);
+            descriptionTextView = itemView.findViewById(R.id.cardTextView2);
             dateTextView = itemView.findViewById(R.id.dateTextView);
 
             RecyclerView recyclerView = itemView.findViewById(R.id.listTagsForNote);

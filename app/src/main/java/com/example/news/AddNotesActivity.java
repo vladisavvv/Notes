@@ -25,7 +25,7 @@ public class AddNotesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
+        setContentView(R.layout.editor_activity);
 
         final Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
@@ -64,29 +64,30 @@ public class AddNotesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.app_bar_search)
+        if (item.getItemId() == R.id.app_bar_search) {
             finish();
 
-        ContentValues cv = new ContentValues();
+            ContentValues cv = new ContentValues();
 
-        final TextInputEditText nameTextInputEditText = findViewById(R.id.headingEditText);
+            final TextInputEditText nameTextInputEditText = findViewById(R.id.headingEditText);
 
-        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());
-        cv.put("date", sdf.format(new Date()));
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());
+            cv.put("date", sdf.format(new Date()));
 
-        cv.put("name", nameTextInputEditText.getText().toString());
-        cv.put("notes", ((TextInputEditText) findViewById(R.id.textInputEditText)).getText().toString());
+            cv.put("name", nameTextInputEditText.getText().toString());
+            cv.put("notes", ((TextInputEditText) findViewById(R.id.textInputEditText)).getText().toString());
 
-        final StringBuilder tags = new StringBuilder();
-        for (final String tag : tagsAdapter.getTagsList())
-            tags.append(tag).append(",");
+            final StringBuilder tags = new StringBuilder();
+            for (final String tag : tagsAdapter.getTagsList())
+                tags.append(tag).append(",");
 
-        cv.put("tags", tags.toString());
+            cv.put("tags", tags.toString());
 
-        if (getIntent().getExtras() != null && getIntent().getExtras().getInt("position") != 0) {
-            MainActivity.getDbHelper().getWritableDatabase().update("notes", cv,  "id=" + getIntent().getExtras().getInt("position"), null);
-        } else
-            MainActivity.getDbHelper().getWritableDatabase().insert("notes", null, cv);
+            if (getIntent().getExtras() != null && getIntent().getExtras().getInt("position") != 0) {
+                MainActivity.getDbHelper().getWritableDatabase().update("notes", cv,  "id=" + getIntent().getExtras().getInt("position"), null);
+            } else
+                MainActivity.getDbHelper().getWritableDatabase().insert("notes", null, cv);
+        }
 
         return true;
     }
