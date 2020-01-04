@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static DBHelper dbHelper;
     private NotesAdapter notesAdapter;
     private NotesForGridAdapter notesForGridAdapter;
+    private static TagsFilterAdapter tagsFilterAdapter = new TagsFilterAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final RecyclerView recyclerView1 = findViewById(R.id.listTags);
-        final TagsFilterAdapter tagsFilterAdapter = new TagsFilterAdapter(this);
+        tagsFilterAdapter.setMainActivity(this);
         recyclerView1.setAdapter(tagsFilterAdapter);
 
         tagsTextInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             gridView.setAdapter(notesForGridAdapter);
         }
 
-        updateAdapter();
+        applyFilter(tagsFilterAdapter.getTagsList());
     }
 
     public void applyFilter(final List<String> tagsList) {
@@ -137,26 +139,8 @@ public class MainActivity extends AppCompatActivity {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             notesAdapter.clear();
 
-            int id = 0;
-
             if (c.moveToFirst()) {
-                int nameColIndex = c.getColumnIndex("name");
-                int notesColIndex = c.getColumnIndex("notes");
-                int tagsColIndex = c.getColumnIndex("tags");
-                int dateColIndex = c.getColumnIndex("date");
-
-                do {
-                    final List<String> tags = Arrays.asList(c.getString(tagsColIndex).split(","));
-                    notesAdapter.addItem(new Note(c.getString(nameColIndex), c.getString(notesColIndex), tags, c.getString(dateColIndex), id));
-                    ++id;
-                } while (c.moveToNext());
-            }
-        } else {
-            notesForGridAdapter.clear();
-
-            int id = 0;
-
-            if (c.moveToFirst()) {
+                int idColIndex = c.getColumnIndex("id");
                 int nameColIndex = c.getColumnIndex("name");
                 int notesColIndex = c.getColumnIndex("notes");
                 int tagsColIndex = c.getColumnIndex("tags");
@@ -164,8 +148,28 @@ public class MainActivity extends AppCompatActivity {
 
                 do {
                     List<String> tags = Arrays.asList(c.getString(tagsColIndex).split(","));
-                    notesForGridAdapter.addItem(new Note(c.getString(nameColIndex), c.getString(notesColIndex), tags, c.getString(dateColIndex), id));
-                    ++id;
+                    if (tags.size() == 1 && tags.get(0).equals(""))
+                        tags = new ArrayList<>();
+
+                    notesAdapter.addItem(new Note(c.getString(nameColIndex), c.getString(notesColIndex), tags, c.getString(dateColIndex), c.getInt(idColIndex)));
+                } while (c.moveToNext());
+            }
+        } else {
+            notesForGridAdapter.clear();
+
+            if (c.moveToFirst()) {
+                int idColIndex = c.getColumnIndex("id");
+                int nameColIndex = c.getColumnIndex("name");
+                int notesColIndex = c.getColumnIndex("notes");
+                int tagsColIndex = c.getColumnIndex("tags");
+                int dateColIndex = c.getColumnIndex("date");
+
+                do {
+                    List<String> tags = Arrays.asList(c.getString(tagsColIndex).split(","));
+                    if (tags.size() == 1 && tags.get(0).equals(""))
+                        tags = new ArrayList<>();
+
+                    notesForGridAdapter.addItem(new Note(c.getString(nameColIndex), c.getString(notesColIndex), tags, c.getString(dateColIndex), c.getInt(idColIndex)));
                 } while (c.moveToNext());
             }
         }

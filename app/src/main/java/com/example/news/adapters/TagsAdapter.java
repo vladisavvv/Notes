@@ -31,7 +31,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull TagViewHolder holder, int position) {
-        holder.bind(tagsList.get(position));
+        holder.bind(tagsList.get(position), position);
     }
 
     @Override
@@ -46,14 +46,26 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagViewHolder>
 
     class TagViewHolder extends RecyclerView.ViewHolder {
         private TextView cardTextView;
+        private View view;
 
-        void bind(String text) {
+        void bind(String text,
+                  final int position) {
             cardTextView.setText(text);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tagsList.remove(position);
+                    notifyDataSetChanged();
+                }
+            });
+
         }
 
         TagViewHolder(View itemView) {
             super(itemView);
             cardTextView = itemView.findViewById(R.id.cardTextView);
+            this.view = itemView;
         }
     }
 

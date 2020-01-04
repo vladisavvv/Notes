@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.news.AddNotesActivity;
+import com.example.news.MainActivity;
 import com.example.news.R;
 import com.example.news.helpers.Note;
 import com.example.news.helpers.SortingType;
@@ -65,7 +67,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
     @Override
     public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
-        holder.bind(notesList.get(position));
+        holder.bind(notesList.get(position), position);
     }
 
     @Override
@@ -102,10 +104,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         private TextView titleTextView;
         private TextView descriptionTextView;
         private TextView dateTextView;
+        private Button button;
         private TagsAdapter tagsAdapter;
         private View view;
 
-        void bind(final Note note) {
+        void bind(final Note note,
+                  final int position) {
             titleTextView.setText((note.getName().length() > 0 ? note.getName() : note.getDate()));
             descriptionTextView.setText(note.getDescription());
 
@@ -119,7 +123,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
                     intent.putExtra("name", note.getName());
                     intent.putExtra("description", note.getDescription());
-                    intent.putExtra("position", note.getId() + 1);
+                    intent.putExtra("position", note.getId());
                     intent.putExtra("date", note.getDate());
 
                     final StringBuilder tags = new StringBuilder();
@@ -134,12 +138,24 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
             tagsAdapter.clear();
             for (int i = 0; i < note.getTags().size(); ++i)
                 tagsAdapter.addItem(note.getTags().get(i));
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notesList.remove(position);
+                    MainActivity.getDbHelper().getWritableDatabase().delete("notes", "id=" + (note.getId() + 1), null);
+
+                    notifyDataSetChanged();
+                }
+            });
         }
 
         NotesViewHolder(View itemView) {
             super(itemView);
 
             this.view = itemView;
+
+            button = itemView.findViewById(R.id.button);
 
             titleTextView = itemView.findViewById(R.id.cardTextView);
             descriptionTextView = itemView.findViewById(R.id.cardTextView2);

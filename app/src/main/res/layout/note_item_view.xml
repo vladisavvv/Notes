@@ -34,6 +34,13 @@
                 android:textSize="15dp"
                 android:text=""
                 android:textColor="@color/colorPrimaryDark" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/ic_dialog_close_light" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

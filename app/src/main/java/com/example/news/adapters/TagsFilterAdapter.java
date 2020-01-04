@@ -18,10 +18,8 @@ public class TagsFilterAdapter extends RecyclerView.Adapter<TagsFilterAdapter.Ta
     private List<String> tagsList = new ArrayList<>();
     private MainActivity mainActivity;
 
-    public TagsFilterAdapter(final MainActivity mainActivity) {
+    public TagsFilterAdapter() {
         super();
-
-        this.mainActivity = mainActivity;
     }
 
     @NonNull
@@ -45,6 +43,10 @@ public class TagsFilterAdapter extends RecyclerView.Adapter<TagsFilterAdapter.Ta
     public void addItem(String tag) {
         tagsList.add(tag);
         notifyDataSetChanged();
+    }
+
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     class TagViewHolder extends RecyclerView.ViewHolder {
