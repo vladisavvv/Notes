@@ -15,6 +15,15 @@ import java.util.List;
 
 public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagViewHolder> {
     private List<String> tagsList = new ArrayList<>();
+    private boolean deleteMode;
+
+    public TagsAdapter(boolean deleteMode) {
+        this.deleteMode = deleteMode;
+    }
+
+    public TagsAdapter() {
+        this.deleteMode = true;
+    }
 
     void clear() {
         tagsList.clear();
@@ -52,14 +61,15 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagViewHolder>
                   final int position) {
             cardTextView.setText(text);
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    tagsList.remove(position);
-                    notifyDataSetChanged();
-                }
-            });
-
+            if (deleteMode) {
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        tagsList.remove(position);
+                        notifyDataSetChanged();
+                    }
+                });
+            }
         }
 
         TagViewHolder(View itemView) {

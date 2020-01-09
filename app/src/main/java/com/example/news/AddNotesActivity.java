@@ -14,6 +14,7 @@ import com.example.news.adapters.TagsAdapter;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +56,9 @@ public class AddNotesActivity extends AppCompatActivity {
             descriptionTextInputEditText.setText(getIntent().getExtras().getString("description"));
 
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("tags") != null) {
-            final List<String> tags = Arrays.asList(getIntent().getExtras().getString("tags").split(","));
+            List<String> tags = Arrays.asList(getIntent().getExtras().getString("tags").split(","));
+            if (tags.size() == 1 && tags.get(0).equals(""))
+                tags = new ArrayList<>();
 
             for (int i = 0; i < tags.size(); ++i)
                 tagsAdapter.addItem(tags.get(i));

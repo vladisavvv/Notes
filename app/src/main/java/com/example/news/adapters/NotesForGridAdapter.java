@@ -107,7 +107,10 @@ public class NotesForGridAdapter extends BaseAdapter {
 
                 final StringBuilder tags = new StringBuilder();
                 for (final String tag : notesList.get(position).getTags())
-                    tags.append(tag).append(",");
+                    if (!tag.equals(notesList.get(notesList.size() - 1)))
+                        tags.append(tag).append(",");
+                    else
+                        tags.append(tag);
                 browserIntent.putExtra("tags", tags.toString());
 
                 parent.getContext().startActivity(browserIntent);

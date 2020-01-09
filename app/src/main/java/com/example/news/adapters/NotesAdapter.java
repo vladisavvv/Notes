@@ -127,8 +127,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
                     intent.putExtra("date", note.getDate());
 
                     final StringBuilder tags = new StringBuilder();
-                    for (final String tag : note.getTags())
-                        tags.append(tag).append(",");
+                    for (final String tag : notesList.get(position).getTags())
+                        if (!tag.equals(notesList.get(notesList.size() - 1)))
+                            tags.append(tag).append(",");
+                        else
+                            tags.append(tag);
                     intent.putExtra("tags", tags.toString());
 
                     view.getContext().startActivity(intent);
@@ -143,7 +146,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
                 @Override
                 public void onClick(View v) {
                     notesList.remove(position);
-                    MainActivity.getDbHelper().getWritableDatabase().delete("notes", "id=" + (note.getId() + 1), null);
+                    MainActivity.getDbHelper().getWritableDatabase().delete("notes", "id=" + note.getId(), null);
 
                     notifyDataSetChanged();
                 }
@@ -162,7 +165,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
             dateTextView = itemView.findViewById(R.id.dateTextView);
 
             RecyclerView recyclerView = itemView.findViewById(R.id.listTagsForNote);
-            tagsAdapter = new TagsAdapter();
+            tagsAdapter = new TagsAdapter(false);
             recyclerView.setAdapter(tagsAdapter);
         }
     }
